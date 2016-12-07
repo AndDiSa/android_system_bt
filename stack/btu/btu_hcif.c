@@ -113,7 +113,6 @@ static void btu_hcif_ssr_evt (UINT8 *p, UINT16 evt_len);
 
     #if BLE_INCLUDED == TRUE
 static void btu_ble_ll_conn_complete_evt (UINT8 *p, UINT16 evt_len);
-static void btu_ble_process_adv_pkt (UINT8 *p);
 static void btu_ble_read_remote_feat_evt (UINT8 *p);
 static void btu_ble_ll_conn_param_upd_evt (UINT8 *p, UINT16 evt_len);
 static void btu_ble_proc_ltk_req (UINT8 *p);
@@ -306,7 +305,8 @@ void btu_hcif_process_event (UNUSED_ATTR UINT8 controller_id, BT_HDR *p_msg)
             switch (ble_sub_code)
             {
                 case HCI_BLE_ADV_PKT_RPT_EVT: /* result of inquiry */
-                    btu_ble_process_adv_pkt(p);
+                    HCI_TRACE_EVENT("HCI_BLE_ADV_PKT_RPT_EVT");
+                    btm_ble_process_adv_pkt(hci_evt_len - 1, p);
                     break;
                 case HCI_BLE_CONN_COMPLETE_EVT:
                     btu_ble_ll_conn_complete_evt(p, hci_evt_len);
@@ -1609,13 +1609,6 @@ static void btu_hcif_encryption_key_refresh_cmpl_evt (UINT8 *p)
     if (status == HCI_SUCCESS) enc_enable = 1;
 
     btm_sec_encrypt_change (handle, status, enc_enable);
-}
-
-static void btu_ble_process_adv_pkt (UINT8 *p)
-{
-    HCI_TRACE_EVENT("btu_ble_process_adv_pkt");
-
-    btm_ble_process_adv_pkt(p);
 }
 
 static void btu_ble_ll_conn_complete_evt ( UINT8 *p, UINT16 evt_len)
