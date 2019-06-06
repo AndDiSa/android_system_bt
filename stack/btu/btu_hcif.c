@@ -601,6 +601,24 @@ static void btu_hcif_rmt_name_request_comp_evt (UINT8 *p, UINT16 evt_len)
     btm_sec_rmt_name_request_complete (bd_addr, p, status);
 }
 
+  if (status == HCI_ERR_INSUFFCIENT_SECURITY) {
+    /* If remote device stop the encryption before we call "Read Encryption Key
+     * Size", we might receive Insufficient Security, which means that link is
+     * no longer encrypted. */
+    HCI_TRACE_WARNING("%s encryption stopped on link: 0x%02x", __func__,
+                      handle);
+    return;
+  }
+
+  if (status == HCI_ERR_INSUFFCIENT_SECURITY) {
+    /* If remote device stop the encryption before we call "Read Encryption Key
+     * Size", we might receive Insufficient Security, which means that link is
+     * no longer encrypted. */
+    HCI_TRACE_WARNING("%s encryption stopped on link: 0x%02x", __func__,
+                      handle);
+    return;
+  }
+
 /*******************************************************************************
 **
 ** Function         btu_hcif_encryption_change_evt
