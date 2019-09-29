@@ -1360,15 +1360,17 @@ BOOLEAN btsnd_hcic_read_encryption_key_size(UINT16 handle) {
     BT_HDR *p = (BT_HDR *)osi_malloc(HCI_CMD_BUF_SIZE);
     UINT8 *pp = (UINT8 *)(p + 1);
 
-    p->len    = HCIC_PREAMBLE_SIZE + 2;
+    p->len    = HCIC_PREAMBLE_SIZE + HCIC_PARAM_SIZE_CMD_HANDLE;
     p->offset = 0;
+
+    UINT16_TO_STREAM (pp, HCI_READ_ENCR_KEY_SIZE);
+    UINT8_TO_STREAM  (pp, HCIC_PARAM_SIZE_CMD_HANDLE);
 
     UINT16_TO_STREAM (pp, handle);
 
     btu_hcif_send_cmd (LOCAL_BR_EDR_CONTROLLER_ID,  p);
     return (TRUE);
 }
-
 
 BOOLEAN btsnd_hcic_enable_test_mode (void)
 {
