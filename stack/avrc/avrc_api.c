@@ -541,13 +541,12 @@ static void avrc_msg_cback(UINT8 handle, UINT8 label, UINT8 cr,
 #endif
     tAVRC_MSG_VENDOR *p_msg = &msg.vendor;
 
-    if (cr == AVCT_CMD &&
-        (p_pkt->layer_specific & AVCT_DATA_CTRL && AVRC_PACKET_LEN < sizeof(p_pkt->len)))
+    if (cr == AVCT_CMD && (p_pkt->layer_specific & AVCT_DATA_CTRL &&
+                           p_pkt->len > AVRC_PACKET_LEN))
     {
-        /* Ignore the invalid AV/C command frame */
-#if (BT_USE_TRACES == TRUE)
-        p_drop_msg = "dropped - too long AV/C cmd frame size";
-#endif
+        android_errorWriteLog(0x534e4554, "177611958");
+        AVRC_TRACE_WARNING("%s: Command length %d too long: must be at most %d",
+                           __func__, p_pkt->len, AVRC_PACKET_LEN);
         osi_free(p_pkt);
         return;
     }
@@ -602,6 +601,8 @@ static void avrc_msg_cback(UINT8 handle, UINT8 label, UINT8 cr,
             else
             {
                 /* parse response */
+#if (BT_USE_TRACES == TRUE)
+#endif
                 p_data += 4; /* 3 bytes: ctype, subunit*, opcode + octet 3 (is 7)*/
                 msg.unit.unit_type  = (*p_data & AVRC_SUBTYPE_MASK) >> AVRC_SUBTYPE_SHIFT;
                 msg.unit.unit       = *p_data & AVRC_SUBID_MASK;
@@ -633,6 +634,8 @@ static void avrc_msg_cback(UINT8 handle, UINT8 label, UINT8 cr,
             else
             {
                 /* parse response */
+#if (BT_USE_TRACES == TRUE)
+#endif
                 p_data += AVRC_AVC_HDR_SIZE; /* 3 bytes: ctype, subunit*, opcode */
                 msg.sub.page    = (*p_data++ >> AVRC_SUB_PAGE_SHIFT) & AVRC_SUB_PAGE_MASK;
                 xx      = 0;
