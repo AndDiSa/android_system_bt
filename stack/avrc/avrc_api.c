@@ -544,7 +544,6 @@ static void avrc_msg_cback(UINT8 handle, UINT8 label, UINT8 cr,
     if (cr == AVCT_CMD && (p_pkt->layer_specific & AVCT_DATA_CTRL &&
                            p_pkt->len > AVRC_PACKET_LEN))
     {
-        android_errorWriteLog(0x534e4554, "177611958");
         AVRC_TRACE_WARNING("%s: Command length %d too long: must be at most %d",
                            __func__, p_pkt->len, AVRC_PACKET_LEN);
         osi_free(p_pkt);
