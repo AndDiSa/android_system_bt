@@ -599,7 +599,7 @@ static void bta_hf_client_handle_btrh( UINT16 code)
     buf += sizeof("\r\n") - 1;
 
 /* skip rest of AT string up to <cr> */
-#define AT_SKIP_REST(buf) while(*buf != '\r') buf++;
+#define AT_SKIP_REST(buf) while(*buf != '\r' && *buf != '\0') buf++;
 
 static char *bta_hf_client_parse_ok(char *buffer)
 {
