@@ -287,6 +287,10 @@ bt_status_t create_sdp_record(bluetooth_sdp_record *record, int* record_handle) 
 bt_status_t remove_sdp_record(int record_id) {
     int handle;
 
+    if (record_id >= MAX_SDP_SLOTS) {
+        return BT_STATUS_PARM_INVALID;
+    }
+
     pthread_mutex_lock(&sdp_lock);
     if (sdp_slots[record_id].state == SDP_RECORD_CREATE_INITIATED) {
         if (sdp_pending_count < MAX_SDP_SLOTS) {
