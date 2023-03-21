@@ -161,9 +161,9 @@ static void sdp_snd_service_search_req(tCONN_CB *p_ccb, UINT8 cont_len, UINT8 * 
     /* Account for header size, max service record count and
      * continuation state */
     const UINT16 base_bytes = (sizeof(BT_HDR) + L2CAP_MIN_OFFSET +
-                                 3u +        /* service search request header */
-                                 2u + 2u +   /* param len, max service records */
-                                 1u + ((p_cont) ? cont_len : 0));   /* continuation state */
+                                 3u + /* service search request header */
+                                 2u + /* param len */
+                                 3u + ((p_cont) ? cont_len : 0));
 
     if (base_bytes > bytes_left) {
         SDP_TRACE_ERROR("SDP: Overran SDP data buffer");
@@ -740,11 +740,13 @@ static void process_service_search_attr_rsp (tCONN_CB* p_ccb, uint8_t* p_reply,
         p_param_len = p;
         p += 2;
 
-        /* Account for header size, max attr count and continuation state */
-        const UINT16 base_bytes =
-                (sizeof(BT_HDR) + L2CAP_MIN_OFFSET + 3u + /* service search attr request header */
-                 2u + 2u +                                /* param len, max attr count */
-                 1u + ((p_reply) ? (*p_reply) : 0));      /* continuation state */
+        /* Account for header size, max service record count and
+         * continuation state */
+        const UINT16 base_bytes = (sizeof(BT_HDR) + L2CAP_MIN_OFFSET +
+                                     3u + /* service search request header */
+                                     2u + /* param len */
+                                     3u + /* max service record count */
+                                     ((p_reply) ? (*p_reply) : 0));
 
         if (base_bytes > bytes_left) {
             sdp_disconnect(p_ccb, SDP_INVALID_CONT_STATE);
