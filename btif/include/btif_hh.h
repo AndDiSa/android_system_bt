@@ -77,6 +77,7 @@ typedef struct
     UINT8             dev_handle;
     bt_bdaddr_t       bd_addr;
     tBTA_HH_ATTR_MASK attr_mask;
+    BOOLEAN reconnect_allowed;
 } btif_hh_added_device_t;
 
 /**
@@ -102,12 +103,14 @@ extern btif_hh_cb_t btif_hh_cb;
 
 extern btif_hh_device_t *btif_hh_find_connected_dev_by_handle(UINT8 handle);
 extern void btif_hh_remove_device(bt_bdaddr_t bd_addr);
-BOOLEAN btif_hh_add_added_dev(bt_bdaddr_t bda, tBTA_HH_ATTR_MASK attr_mask);
+BOOLEAN btif_hh_add_added_dev(bt_bdaddr_t bda, tBTA_HH_ATTR_MASK attr_mask,
+                                          bool reconnect_allowed);
 extern bt_status_t btif_hh_virtual_unplug(bt_bdaddr_t *bd_addr);
 extern void btif_hh_disconnect(bt_bdaddr_t *bd_addr);
 extern void btif_hh_setreport(btif_hh_device_t *p_dev, bthh_report_type_t r_type,
                     UINT16 size, UINT8* report);
 
-BOOLEAN btif_hh_add_added_dev(bt_bdaddr_t bd_addr, tBTA_HH_ATTR_MASK attr_mask);
+BOOLEAN btif_hh_add_added_dev(bt_bdaddr_t bd_addr, tBTA_HH_ATTR_MASK attr_mask,
+                                          bool reconnect_allowed);
 
 #endif
