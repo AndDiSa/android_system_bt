@@ -21,6 +21,7 @@
 
 static const char BT_UTILS_MODULE[] = "bt_utils_module";
 
+#include <stdint.h>
 /*******************************************************************************
 **  Type definitions
 ********************************************************************************/
@@ -43,4 +44,8 @@ typedef enum {
 void raise_priority_a2dp(tHIGH_PRIORITY_TASK high_task);
 void adjust_priority_a2dp(int start);
 #define UNUSED(x) (void)(x)
+#ifndef ADDRESS_TO_LOGGABLE_CSTR
+const char* addr_to_string(const uint8_t addr[6]);
+#define ADDRESS_TO_LOGGABLE_CSTR(addr) addr_to_string(addr)
+#endif
 #endif /* BT_UTILS_H */
