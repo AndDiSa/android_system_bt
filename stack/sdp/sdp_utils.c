@@ -189,7 +189,6 @@ void sdpu_update_ccb_cont_info (UINT32 handle)
         }
     }
 }
-
 /*******************************************************************************
 **
 ** Function         sdpu_build_attrib_seq

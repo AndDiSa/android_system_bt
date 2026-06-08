@@ -182,6 +182,22 @@ void adjust_priority_a2dp(int start) {
         }
     }
 }
+
+/*****************************************************************************
+**
+** Function        addr_to_string
+**
+** Description     Converts Bluetooth address bytes to "XX:XX:XX:XX:XX:XX" string
+**
+** Returns         string
+**
+*******************************************************************************/
+const char* addr_to_string(const uint8_t addr[6]) {
+    static char str[18];  // "XX:XX:XX:XX:XX:XX" + null terminator
+    snprintf(str, sizeof(str), "%02x:%02x:%02x:%02x:%02x:%02x",
+             addr[0], addr[1], addr[2], addr[3], addr[4], addr[5]);
+    return str;
+}
 }
 
 /*****************************************************************************
