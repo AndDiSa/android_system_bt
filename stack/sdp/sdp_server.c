@@ -438,6 +438,14 @@ static void process_service_attr_req (tCONN_CB *p_ccb, UINT16 trans_num,
             }
 
             attr_len = sdpu_get_attrib_entry_len(p_attr);
+            if (p_attr->len > SDP_MAX_ATTR_LEN)
+            {
+                SDP_TRACE_ERROR(
+                    "SDP attr too big: SDP_MAX_ATTR_LEN=%d,attr_len=%d,val_len=%d",
+                    SDP_MAX_ATTR_LEN, attr_len, p_attr->len);
+                sdpu_build_n_send_error(p_ccb, trans_num, SDP_NO_RESOURCES, NULL);
+                return;
+            }
             /* if there is a partial attribute pending to be sent */
             if (p_ccb->cont_info.attr_offset)
             {
@@ -460,13 +468,6 @@ static void process_service_attr_req (tCONN_CB *p_ccb, UINT16 trans_num,
             }
             else if (rem_len < attr_len) /* Not enough space for attr... so add partially */
             {
-                if (attr_len >= SDP_MAX_ATTR_LEN)
-                {
-                    SDP_TRACE_ERROR("SDP attr too big: max_list_len=%d,attr_len=%d", max_list_len, attr_len);
-                    sdpu_build_n_send_error (p_ccb, trans_num, SDP_NO_RESOURCES, NULL);
-                    return;
-                }
-
                 /* add the partial attribute if possible */
                 p_rsp = sdpu_build_partial_attrib_entry (p_rsp, p_attr, (UINT16)rem_len,
                                                          &p_ccb->cont_info.attr_offset);
@@ -699,6 +700,14 @@ static void process_service_search_attr_req (tCONN_CB *p_ccb, UINT16 trans_num,
                 }
 
                 attr_len = sdpu_get_attrib_entry_len(p_attr);
+                if (p_attr->len > SDP_MAX_ATTR_LEN)
+                {
+                    SDP_TRACE_ERROR(
+                        "SDP attr too big: SDP_MAX_ATTR_LEN=%d,attr_len=%d,val_len=%d",
+                        SDP_MAX_ATTR_LEN, attr_len, p_attr->len);
+                    sdpu_build_n_send_error(p_ccb, trans_num, SDP_NO_RESOURCES, NULL);
+                    return;
+                }
                 /* if there is a partial attribute pending to be sent */
                 if (p_ccb->cont_info.attr_offset)
                 {
@@ -724,13 +733,6 @@ static void process_service_search_attr_req (tCONN_CB *p_ccb, UINT16 trans_num,
                 }
                 else if (rem_len < attr_len) /* Not enough space for attr... so add partially */
                 {
-                    if (attr_len >= SDP_MAX_ATTR_LEN)
-                    {
-                        SDP_TRACE_ERROR("SDP attr too big: max_list_len=%d,attr_len=%d", max_list_len, attr_len);
-                        sdpu_build_n_send_error (p_ccb, trans_num, SDP_NO_RESOURCES, NULL);
-                        return;
-                    }
-
                     /* add the partial attribute if possible */
                     p_rsp = sdpu_build_partial_attrib_entry (p_rsp, p_attr, (UINT16)rem_len,
                                                              &p_ccb->cont_info.attr_offset);
